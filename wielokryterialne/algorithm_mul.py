@@ -96,11 +96,11 @@ hallOfFame = nsga2_alg.myParetoFront(100)
 toolbox.register("algorithm", nsga2_alg.nsga2Algorithm, toolbox=toolbox,
                  stats=stats, cxpb=CXPB, mutpb=MUTPB, ngen=FREQ, verbose=False, halloffame=hallOfFame)
 
-logbooks = []
 
 bestIndividuals = []
 start_time = time.time()
 iterations_wo_improvement = 0
+islandsLog = []
 
 # Początkowa populacja
 islands = [toolbox.population(n=ISLAND_POPULATION_SIZE)
@@ -142,19 +142,11 @@ while(iterations_wo_improvement <= max_iterations_wo_improvement / FREQ):
                                              FREQ / max_iterations_wo_improvement) * 100, "%  time:", round(time.time() - mig_start_time, 2))
         mig_start_time = time.time()
 
-    bestInMigration = []
-    for ind in hallOfFame:
-        bestInMigration.append(ind.fitness.values)
 
-    bestIndividuals.append(bestInMigration)
+    islandsLog.append([len(island) for island in islands])
 
-    if first:
-        for logbook in ziped[1]:
-            logbooks.append(logbook)
-        first = False
-    else:
-        for k, logbook in enumerate(ziped[1]):
-            logbooks[k] += logbook
+    bestIndividuals.append([ind.fitness.values for ind in hallOfFame])
+
 
     toolbox.migrate(islands)
 
@@ -165,8 +157,7 @@ print("Hall of fame[0]:", hallOfFame[0], hallOfFame[0].fitness)
 # Save results
 pickleOut = open("./out/" + BENCHMARK_NAME + "_" + str(NUM_OF_ISLANDS) +
                  "_" + str(MIGRATION_RATIO) + "_" + MODEL + "_" + str(NUM_OF_OBJECTIVES) + ".pickle", "wb")
-pickle.dump(utils.result(
-    logbooks, bestIndividuals, time.time() - start_time), pickleOut)
+pickle.dump(utils.result(islandsLog, bestIndividuals, time.time() - start_time), pickleOut)
 pickleOut.close()
 
 print("\n")

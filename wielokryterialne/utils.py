@@ -19,13 +19,13 @@ def saveParetoFront(front):
 
 class result:
 
-    def __init__(self, logbooks, hallOfFamers, time):
-        self.logbooks = logbooks
+    def __init__(self, islandsLog, hallOfFamers, time):
+        self.islandsLog = islandsLog
         self.hallOfFamers = hallOfFamers
         self.time = time
 
-    def getLogbooks(self):
-        return self.logbooks
+    def getIslandsLog(self):
+        return self.islandsLog
 
     def getHallOfFamers(self):
         return self.hallOfFamers
