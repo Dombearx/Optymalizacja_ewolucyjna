@@ -90,8 +90,6 @@ class myParetoFront():
 
 def nsga2Algorithm(population, toolbox, cxpb, mutpb, ngen, stats=None, halloffame=None, verbose=__debug__):
 
-    logbook = tools.Logbook()
-    logbook.header = ['gen', 'nevals'] + (stats.fields if stats else [])
 
     # Evaluate the individuals with an invalid fitness
     invalid_ind = [ind for ind in population if not ind.fitness.valid]
@@ -108,11 +106,6 @@ def nsga2Algorithm(population, toolbox, cxpb, mutpb, ngen, stats=None, halloffam
     # no actual selection is done
     population = toolbox.select(population, len(population))
 
-    record = stats.compile(population) if stats else {}
-    logbook.record(gen=0, evals=len(invalid_ind), **record)
-
-    if verbose:
-        print(logbook.stream)
     # Begin the generational process
 
     removed = 0
@@ -149,8 +142,5 @@ def nsga2Algorithm(population, toolbox, cxpb, mutpb, ngen, stats=None, halloffam
 
         # Select the next generation population
         population = toolbox.select(population + offspring, numOfIndividuals)
-        record = stats.compile(population) if stats else {}
-        logbook.record(gen=gen, evals=len(invalid_ind), **record)
-        if verbose:
-            print(logbook.stream)
-    return population, logbook, removed
+
+    return population, [], removed
